@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saarthi — Current Affairs for UPSC/SSC/State PSC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════ */
+:root {
+  --navy:        #0d1b2a;
+  --navy2:       #152238;
+  --navy3:       #1e3354;
+  --saffron:     #E8751A;
+  --saffron2:    #F59E0B;
+  --saffron-dim: rgba(232,117,26,0.12);
+  --white:       #F7F4EF;
+  --white2:      #EDE9E1;
+  --cream:       #FAF7F2;
+  --text:        #1a1a1a;
+  --text2:       #3d3d3d;
+  --text3:       #6b6b6b;
+  --text4:       #9a9a9a;
+  --border:      rgba(0,0,0,0.08);
+  --border2:     rgba(0,0,0,0.14);
+  --shadow:      0 2px 24px rgba(13,27,42,0.08);
+  --shadow2:     0 8px 48px rgba(13,27,42,0.14);
+
+  /* Dimension colors */
+  --dim-history:   #7C3AED;
+  --dim-geo:       #0891B2;
+  --dim-eco:       #059669;
+  --dim-polity:    #DC2626;
+  --dim-env:       #16A34A;
+  --dim-overlap:   #D97706;
+  --dim-science:   #2563EB;
+  --dim-society:   #DB2777;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════════════════ */
+#topbar {
+  background: var(--navy);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 3px solid var(--saffron);
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
+}
+.logo span { color: var(--saffron); }
+
+.logo-tagline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-left: -4px;
+}
+
+.topbar-spacer { flex: 1; }
+
+.topbar-streak {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 99px;
+  padding: 5px 14px 5px 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+.streak-fire { font-size: 16px; }
+.streak-count { font-weight: 700; color: var(--saffron2); font-family: 'JetBrains Mono', monospace; }
+
+.topbar-pill {
+  background: rgba(232,117,26,0.15);
+  border: 1.5px solid var(--saffron);
+  color: var(--saffron2);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.topbar-pill:hover { background: var(--saffron); color: #fff; }
+
+/* ══════════════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════════════ */
+#app {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: calc(100vh - 60px);
+}
+
+/* ══════════════════════════════════════════════════════
+   LEFT SIDEBAR — DATE & TOPIC LIST
+══════════════════════════════════════════════════════ */
+#sidebar {
+  background: var(--navy);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+
+.sidebar-header {
+  padding: 20px 20px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+.sidebar-search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 13px;
+  font-family: 'Source Sans 3', sans-serif;
+  flex: 1;
+}
+.sidebar-search input::placeholder { color: rgba(255,255,255,0.3); }
+.search-icon { color: rgba(255,255,255,0.3); font-size: 14px; }
+
+.exam-filter {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.exam-tag {
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all .15s;
+  color: rgba(255,255,255,0.5);
+  border-color: rgba(255,255,255,0.12);
+}
+.exam-tag.active { background: var(--saffron); border-color: var(--saffron); color: #fff; }
+.exam-tag:hover { border-color: var(--saffron2); color: var(--saffron2); }
+
+.date-group { padding: 0 0 8px; }
+
+.date-label {
+  padding: 14px 20px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.date-label-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+}
+.date-today-badge {
+  font-size: 9px;
+  background: var(--saffron);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.topic-item {
+  padding: 11px 20px;
+  cursor: pointer;
+  transition: all .18s;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+.topic-item:hover { background: rgba(255,255,255,0.04); }
+.topic-item.active {
+  background: rgba(232,117,26,0.1);
+  border-left-color: var(--saffron);
+}
+
+.topic-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.topic-text { flex: 1; min-width: 0; }
+.topic-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.topic-item.active .topic-name { color: #fff; }
+
+.topic-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.topic-category {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.topic-depth-bar {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.topic-depth-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--saffron), var(--saffron2));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+.topic-new-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--saffron2);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════════════════ */
+#main {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 60px);
+}
+
+/* ── Welcome / Empty state */
+#welcome-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.welcome-emblem {
+  width: 90px;
+  height: 90px;
+  background: var(--navy);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 40px rgba(13,27,42,0.15);
+  animation: emblemPulse 3s ease-in-out infinite;
+}
+@keyframes emblemPulse {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.welcome-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.welcome-sub {
+  font-size: 15px;
+  color: var(--text3);
+  max-width: 420px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.welcome-tips {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.welcome-tip {
+  background: #fff;
+  border: 1.5px solid var(--border2);
+  border-radius: 14px;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--text2);
+  max-width: 180px;
+  text-align: left;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+}
+.welcome-tip-icon { font-size: 22px; display: block; margin-bottom: 8px; }
+
+/* ── Article View */
+#article-view {
+  flex: 1;
+  padding: 40px 48px 80px;
+  max-width: 900px;
+  display: none;
+  animation: fadeSlideIn .35s ease both;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text4);
+  margin-bottom: 24px;
+}
+.bc-sep { opacity: 0.4; }
+.bc-current { color: var(--saffron); font-weight: 600; }
+
+/* ── Category badge */
+.article-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ── Headline */
+.article-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+}
+
+/* ── Meta row */
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+.meta-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text4);
+}
+.meta-source {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--saffron);
+}
+.meta-exam-tags { display: flex; gap: 5px; margin-left: auto; }
+.meta-exam-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+
+/* ── News body */
+.news-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text2);
+  margin-bottom: 32px;
+}
+.news-body p { margin-bottom: 16px; }
+.news-body strong { color: var(--text); font-weight: 600; }
+.news-body .highlight {
+  background: linear-gradient(120deg, rgba(232,117,26,0.12) 0%, rgba(245,158,11,0.08) 100%);
+  padding: 14px 18px;
+  border-left: 3px solid var(--saffron);
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+/* ── Key Points panel */
+.key-points-panel {
+  background: var(--navy);
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.key-points-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(232,117,26,0.15), transparent 70%);
+  pointer-events: none;
+}
+.kp-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--saffron2);
+  margin-bottom: 16px;
+}
+.kp-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.kp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.5;
+}
+.kp-bullet {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--saffron);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════════════════
+   DEPTH EXPLORE SECTION
+══════════════════════════════════════════════════════ */
+.depth-section {
+  border-top: 2px solid var(--border);
+  padding-top: 28px;
+}
+
+.depth-cta-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy3) 100%);
+  border-radius: 18px;
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  cursor: pointer;
+  transition: all .25s;
+  border: 1.5px solid rgba(232,117,26,0.25);
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.depth-cta-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(232,117,26,0.05));
+  opacity: 0;
+  transition: opacity .25s;
+}
+.depth-cta-banner:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(13,27,42,0.2); }
+.depth-cta-banner:hover::after { opacity: 1; }
+.depth-cta-banner:hover .cta-arrow { transform: translateX(4px); }
+
+.cta-icon { font-size: 36px; flex-shrink: 0; }
+.cta-text { flex: 1; }
+.cta-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.cta-sub { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+.cta-arrow {
+  font-size: 24px;
+  color: var(--saffron2);
+  transition: transform .25s;
+  flex-shrink: 0;
+}
+
+.depth-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.depth-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1.5px solid;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity .15s;
+}
+.depth-chip:hover { opacity: 0.8; }
+
+/* ══════════════════════════════════════════════════════
+   DIMENSION EXPLORER
+══════════════════════════════════════════════════════ */
+#dimension-panel {
+  display: none;
+  margin-top: 28px;
+  animation: fadeSlideIn .3s ease both;
+}
+
+.dim-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--navy);
+  border-radius: 14px 14px 0 0;
+  padding: 6px 6px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.dim-tabs::-webkit-scrollbar { display: none; }
+
+.dim-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  transition: all .2s;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.dim-tab:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.04); }
+.dim-tab.active { background: #fff; color: var(--text); }
+.dim-tab.active .dim-tab-icon { filter: none; }
+.dim-tab-icon { font-size: 15px; }
+
+.dim-content-wrap {
+  background: #fff;
+  border-radius: 0 0 18px 18px;
+  min-height: 300px;
+  border: 1px solid var(--border2);
+  border-top: none;
+  overflow: hidden;
+}
+
+.dim-pane {
+  display: none;
+  padding: 32px 36px;
+  animation: fadeSlideIn .25s ease both;
+}
+.dim-pane.active { display: block; }
+
+/* Dimension header */
+.dim-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+.dim-header-icon {
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.dim-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.dim-subtitle { font-size: 13px; color: var(--text3); margin-top: 2px; }
+
+/* AI loading state */
+.dim-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px;
+  gap: 16px;
+}
+.loading-orbit {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 3px solid var(--border2);
+  border-top-color: var(--saffron);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--text3); font-style: italic; }
+
+/* Dimension content blocks */
+.dim-body {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text2);
+}
+.dim-body p { margin-bottom: 14px; }
+.dim-body strong { color: var(--text); }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0;
+}
+.info-card {
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--border2);
+}
+.info-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text4);
+  margin-bottom: 6px;
+}
+.info-card-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.4;
+}
+
+.timeline-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 20px 0;
+  padding-left: 4px;
+}
+.timeline-event {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 22px;
+}
+.timeline-event:last-child { padding-bottom: 0; }
+.timeline-event:last-child .tl-line { display: none; }
+.tl-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 20px;
+}
+.tl-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--saffron);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--saffron);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.tl-line { flex: 1; width: 2px; background: var(--border2); margin-top: 4px; }
+.tl-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--saffron);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 40px;
+  margin-top: 4px;
+}
+.tl-text { font-size: 14px; color: var(--text2); line-height: 1.5; margin-top: 2px; }
+
+.impact-row {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+  flex-wrap: wrap;
+}
+.impact-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid;
+}
+
+.quote-block {
+  border-left: 4px solid var(--saffron);
+  padding: 14px 20px;
+  background: var(--cream);
+  border-radius: 0 10px 10px 0;
+  margin: 18px 0;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text2);
+}
+.quote-source {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--text4);
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* Map placeholder */
+.map-placeholder {
+  background: linear-gradient(135deg, #e8f4fd, #d1e9f5);
+  border-radius: 14px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  margin: 20px 0;
+  border: 1px dashed rgba(8,145,178,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.map-placeholder::after {
+  content: 'Geographic Context';
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(8,145,178,0.6);
+  white-space: nowrap;
+}
+
+/* PYQ section */
+.pyq-item {
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  transition: all .2s;
+}
+.pyq-item:hover { border-color: var(--saffron2); background: #fff; box-shadow: var(--shadow); }
+.pyq-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--saffron);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.pyq-q { font-size: 14px; color: var(--text); line-height: 1.5; }
+.pyq-exam { font-size: 10px; font-weight: 600; color: var(--text4); margin-top: 6px; }
+
+/* ══════════════════════════════════════════════════════
+   BOTTOM ACTIONS BAR
+══════════════════════════════════════════════════════ */
+.article-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border2);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .18s;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.action-btn:hover { border-color: var(--saffron2); color: var(--saffron); background: var(--saffron-dim); }
+.action-btn.primary {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+.action-btn.primary:hover { background: var(--navy3); }
+
+/* ══════════════════════════════════════════════════════
+   PROGRESS TRACKER (right side mini)
+══════════════════════════════════════════════════════ */
+.progress-sidebar {
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: auto;
+}
+.progress-title {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.progress-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 8px;
+}
+.progress-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--saffron2);
+}
+.progress-bar-wrap {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--saffron), var(--saffron2));
+  border-radius: 99px;
+}
+
+/* ══════════════════════════════════════════════════════
+   QUIZ CALLOUT (in dimension panes)
+══════════════════════════════════════════════════════ */
+.quiz-callout {
+  background: linear-gradient(135deg, var(--navy), var(--navy3));
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid rgba(232,117,26,0.2);
+}
+.quiz-callout:hover { transform: translateX(3px); }
+.quiz-icon { font-size: 28px; }
+.quiz-text { flex: 1; }
+.quiz-text-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.quiz-text-sub { font-size: 12px; color: rgba(255,255,255,0.5); }
+.quiz-arrow { color: var(--saffron2); font-size: 20px; }
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 800px) {
+  #app { grid-template-columns: 1fr; }
+  #sidebar { position: fixed; left: -300px; width: 300px; top: 60px; height: calc(100vh - 60px); transition: left .3s; z-index: 90; }
+  #sidebar.open { left: 0; }
+  #article-view { padding: 24px 20px 60px; }
+  .article-headline { font-size: 24px; }
+  .info-grid { grid-template-columns: 1fr; }
+  .dim-pane { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div>
+    <div class="logo">Saa<span>rthi</span></div>
+    <div class="logo-tagline">Current Affairs · Deep Study</div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-streak">
+    <span class="streak-fire">🔥</span>
+    <span class="streak-count" id="streak-count">7</span>
+    <span>day streak</span>
+  </div>
+  <button class="topbar-pill" onclick="showToast('Quiz mode coming soon!')">📝 Quick Quiz</button>
+</div>
+
+<!-- APP LAYOUT -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search topics..." oninput="filterTopics(this.value)">
+      </div>
+      <div class="exam-filter">
+        <span class="exam-tag active" onclick="filterExam(this,'all')">All</span>
+        <span class="exam-tag" onclick="filterExam(this,'upsc')">UPSC</span>
+        <span class="exam-tag" onclick="filterExam(this,'ssc')">SSC</span>
+        <span class="exam-tag" onclick="filterExam(this,'state')">State PSC</span>
+        <span class="exam-tag" onclick="filterExam(this,'rbi')">Banking</span>
+      </div>
+    </div>
+
+    <div id="topic-list"></div>
+
+    <div class="progress-sidebar">
+      <div class="progress-title">Today's Progress</div>
+      <div class="progress-stat">
+        <span>Topics Read</span>
+        <span class="progress-val" id="stat-read">0/8</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="prog-read" style="width:0%"></div>
+      </div>
+      <div class="progress-stat">
+        <span>Deep Dives</span>
+        <span class="progress-val" id="stat-deep">0</span>
+      </div>
+      <div class="progress-stat">
+        <span>Dimensions Explored</span>
+        <span class="progress-val" id="stat-dims">0/0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- WELCOME STATE -->
+    <div id="welcome-state">
+      <div class="welcome-emblem">📰</div>
+      <div class="welcome-title">Good morning, Aspirant</div>
+      <div class="welcome-sub">Select a topic from today's current affairs. Read the news, then explore its historical, geographical, and economic dimensions — all in one place.</div>
+      <div class="welcome-tips">
+        <div class="welcome-tip">
+          <span class="welcome-tip-icon">📄</span>
+          Start by reading the news article — get the core facts first.
+        </div>
+        <div class="welcome-tip">
+          <span class="welcome-tip-icon">🔭</span>
+          Click "Explore Deeper" to unlock all dimensions of understanding.
+        </div>
+        <div class="welcome-tip">
+          <span class="welcome-tip-icon">🧠</span>
+          Each dimension connects the news to your exam syllabus.
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTICLE VIEW -->
+    <div id="article-view"></div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;
+  font-size:13px;font-weight:600;transition:transform .3s ease;z-index:999;
+  border:1px solid rgba(255,255,255,0.1);white-space:nowrap;pointer-events:none;
+">✓ Done</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+const TODAY = new Date();
+const fmt = d => d.toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+const daysAgo = n => { const d = new Date(TODAY); d.setDate(d.getDate()-n); return fmt(d); };
+
+const TOPICS = [
+  // TODAY
+  {
+    id:'t1', date: daysAgo(0), dateGroup:'today',
+    icon:'🛸', category:'Science & Tech', catColor:'#2563EB', catBg:'rgba(37,99,235,0.1)',
+    title: 'ISRO Successfully Tests Reusable Launch Vehicle (RLV-TD) Landing Experiment',
+    exams: ['UPSC','SSC'],
+    source: 'The Hindu',
+    depth: 0,
+    body: `
+      <p>The Indian Space Research Organisation (ISRO) has successfully conducted the <strong>Reusable Launch Vehicle — Technology Demonstrator (RLV-TD) landing experiment</strong> at the Aeronautical Test Range (ATR) in Chitradurga, Karnataka. This marks a significant leap in India's ambition to develop a fully reusable space launch system.</p>
+      <div class="highlight">
+        The RLV-TD, nicknamed "Pushpak," was lifted by an Indian Air Force Chinook helicopter to an altitude of approximately 4.5 km and then autonomously navigated back to a runway landing — simulating the re-entry and landing phase of a reusable launch vehicle.
+      </div>
+      <p>The experiment validated autonomous landing, navigation, and control systems under real atmospheric conditions. A reusable launch vehicle could potentially reduce satellite launch costs by <strong>80%</strong>, making India highly competitive in the global commercial launch market.</p>
+      <p>This technology is crucial for ISRO's long-term goal of developing a <strong>Two-Stage-To-Orbit (TSTO)</strong> vehicle — India's answer to SpaceX's Falcon 9 reusability model.</p>
+    `,
+    keyPoints: [
+      'RLV-TD "Pushpak" successfully landed autonomously on a runway after being air-dropped at 4.5 km altitude',
+      'Test conducted at Aeronautical Test Range (ATR), Chitradurga, Karnataka',
+      'Reusable vehicles can cut launch costs by up to 80%',
+      'Part of ISRO\'s path toward TSTO (Two-Stage-To-Orbit) vehicle by 2040',
+      'Indian Air Force\'s Chinook helicopter was used for the air-drop simulation',
+    ],
+    dimensions: {
+      history: {
+        title:'Historical Significance',
+        subtitle:'India\'s space journey and milestones',
+        icon:'📜', color:'var(--dim-history)', bg:'rgba(124,58,237,0.08)',
+        content: 'history'
+      },
+      geography: {
+        title:'Geographic Context',
+        subtitle:'Key locations and strategic importance',
+        icon:'🗺️', color:'var(--dim-geo)', bg:'rgba(8,145,178,0.08)',
+        content: 'geo'
+      },
+      economy: {
+        title:'Economic Impact',
+        subtitle:'Commercial space economy and India\'s position',
+        icon:'📈', color:'var(--dim-eco)', bg:'rgba(5,150,105,0.08)',
+        content: 'eco'
+      },
+      polity: {
+        title:'Polity & Governance',
+        subtitle:'Policy, laws, and institutional framework',
+        icon:'⚖️', color:'var(--dim-polity)', bg:'rgba(220,38,38,0.08)',
+        content: 'polity'
+      },
+      overlap: {
+        title:'Past Year Questions',
+        subtitle:'Previous exam questions on this topic',
+        icon:'📝', color:'var(--dim-overlap)', bg:'rgba(217,119,6,0.08)',
+        content: 'pyq'
+      },
+      science: {
+        title:'Science & Technology',
+        subtitle:'Technical deep dive into the concept',
+        icon:'🔬', color:'var(--dim-science)', bg:'rgba(37,99,235,0.08)',
+        content: 'science'
+      },
+    }
+  },
+  {
+    id:'t2', date: daysAgo(0), dateGroup:'today',
+    icon:'💰', category:'Economy', catColor:'#059669', catBg:'rgba(5,150,105,0.1)',
+    title: 'RBI Cuts Repo Rate by 25 Basis Points to 6.25% — First Cut Since 2020',
+    exams: ['UPSC','Banking','SSC'],
+    source: 'Business Standard',
+    depth: 0,
+    body: `
+      <p>The Reserve Bank of India's <strong>Monetary Policy Committee (MPC)</strong> has unanimously voted to cut the repo rate by 25 basis points — from 6.50% to <strong>6.25%</strong> — marking the first rate reduction since May 2020. The decision signals a shift in the RBI's monetary stance from "withdrawal of accommodation" to "neutral."</p>
+      <div class="highlight">
+        Governor Sanjay Malhotra, who took charge in December 2024, indicated that with retail inflation declining toward the 4% target and global uncertainties persisting, there is room for monetary easing to support growth.
+      </div>
+      <p>India's GDP growth is projected at <strong>6.7% for FY2025-26</strong>, while CPI inflation is expected to moderate to 4.2%. The rate cut is expected to lower EMIs on home, auto, and personal loans, potentially stimulating consumption demand.</p>
+      <p>This is the first action taken by the newly reconstituted MPC, which now includes three external members appointed by the government in October 2024.</p>
+    `,
+    keyPoints: [
+      'Repo rate cut by 25 bps from 6.50% to 6.25%',
+      'First rate cut in nearly 5 years (since May 2020)',
+      'Monetary stance changed from "withdrawal of accommodation" to "neutral"',
+      'GDP growth projected at 6.7% for FY26; CPI at 4.2%',
+      'Governor Sanjay Malhotra chairs the new MPC',
+    ],
+    dimensions: {
+      history: { title:'Historical Significance', subtitle:'History of RBI rate decisions', icon:'📜', color:'var(--dim-history)', bg:'rgba(124,58,237,0.08)', content:'history' },
+      geography: { title:'Geographic Context', subtitle:'Regional economic impact', icon:'🗺️', color:'var(--dim-geo)', bg:'rgba(8,145,178,0.08)', content:'geo' },
+      economy: { title:'Economic Impact', subtitle:'Impact on loans, inflation, and growth', icon:'📈', color:'var(--dim-eco)', bg:'rgba(5,150,105,0.08)', content:'eco' },
+      polity: { title:'Polity & Governance', subtitle:'RBI\'s mandate and MPC structure', icon:'⚖️', color:'var(--dim-polity)', bg:'rgba(220,38,38,0.08)', content:'polity' },
+      overlap: { title:'Past Year Questions', subtitle:'Previous exam questions on monetary policy', icon:'📝', color:'var(--dim-overlap)', bg:'rgba(217,119,6,0.08)', content:'pyq' },
+      science: { title:'Concept Clarity', subtitle:'Understand repo rate, reverse repo, CRR, SLR', icon:'🔬', color:'var(--dim-science)', bg:'rgba(37,99,235,0.08)', content:'science' },
+    }
+  },
+  {
+    id:'t3', date: daysAgo(0), dateGroup:'today',
+    icon:'🌿', category:'Environment', catColor:'#16A34A', catBg:'rgba(22,163,74,0.1)',
+    title: 'Great Nicobar Island Project Gets Final Forest Clearance Amid Conservation Debate',
+    exams: ['UPSC','State PSC'],
+    source: 'The Hindu / Down to Earth',
+    depth: 0,
+    body: `
+      <p>The Union government's ambitious <strong>₹72,000 crore Great Nicobar Island Holistic Development Project</strong> has received its final forest diversion clearance, allowing the project to proceed despite significant opposition from environmental groups, marine biologists, and tribal rights organizations.</p>
+      <div class="highlight">
+        The project involves developing a transshipment port, an international airport, a township, and a 450 MW power plant on Great Nicobar — India's southernmost island, located at the strategic tri-junction of the Indian Ocean, Bay of Bengal, and the Andaman Sea.
+      </div>
+      <p>Critics argue the project will destroy <strong>130 sq km of pristine tropical rainforest</strong>, displace the indigenous Shompen tribe (classified as a Particularly Vulnerable Tribal Group), and threaten critical sea turtle nesting sites and coral reef ecosystems.</p>
+      <p>Proponents argue that Great Nicobar's position — just <strong>90 km from the Malacca Strait</strong> — makes it strategically vital for India's maritime security and commercial shipping interests, positioning India to compete with Singapore and Colombo as a transshipment hub.</p>
+    `,
+    keyPoints: [
+      '₹72,000 crore mega-project: transshipment port, airport, township, 450 MW power plant',
+      'Located at tri-junction of Indian Ocean, Bay of Bengal, and Andaman Sea',
+      'Will divert ~130 sq km of pristine tropical rainforest',
+      'Shompen tribe — a PVTG — will be affected',
+      'Strategically positioned 90 km from the Malacca Strait',
+    ],
+    dimensions: {
+      history: { title:'Historical Significance', subtitle:'Colonial history and strategic use of Andamans', icon:'📜', color:'var(--dim-history)', bg:'rgba(124,58,237,0.08)', content:'history' },
+      geography: { title:'Geographic Context', subtitle:'Andaman & Nicobar\'s geography and ecology', icon:'🗺️', color:'var(--dim-geo)', bg:'rgba(8,145,178,0.08)', content:'geo' },
+      economy: { title:'Economic Impact', subtitle:'Transshipment economy and port development', icon:'📈', color:'var(--dim-eco)', bg:'rgba(5,150,105,0.08)', content:'eco' },
+      polity: { title:'Polity & Governance', subtitle:'Forest laws, tribal rights, PVTG protections', icon:'⚖️', color:'var(--dim-polity)', bg:'rgba(220,38,38,0.08)', content:'polity' },
+      overlap: { title:'Past Year Questions', subtitle:'Previous questions on Andaman, ecology, tribes', icon:'📝', color:'var(--dim-overlap)', bg:'rgba(217,119,6,0.08)', content:'pyq' },
+      science: { title:'Ecology & Environment', subtitle:'Coral reefs, turtle nesting, tropical forests', icon:'🔬', color:'var(--dim-science)', bg:'rgba(37,99,235,0.08)', content:'science' },
+    }
+  },
+  // YESTERDAY
+  {
+    id:'t4', date: daysAgo(1), dateGroup:'yesterday',
+    icon:'🏛️', category:'Polity', catColor:'#DC2626', catBg:'rgba(220,38,38,0.1)',
+    title: 'Waqf Amendment Bill 2024 Passed in Rajya Sabha After 12-Hour Debate',
+    exams: ['UPSC','State PSC'],
+    source: 'Indian Express',
+    depth: 0,
+    body: `<p>The <strong>Waqf (Amendment) Bill, 2024</strong> was passed in the Rajya Sabha following a marathon 12-hour debate, with the government stating the changes aim to improve transparency and accountability in Waqf board management. The Bill had already been passed in the Lok Sabha.</p>
+    <div class="highlight">Key changes include making Waqf boards more inclusive, providing representation to women and non-Muslims, adding mandatory audit requirements, and giving state governments more oversight power.</div>
+    <p>Opposition parties called it an attack on minority religious rights and constitutional provisions. The Bill will now receive Presidential assent to become law.</p>`,
+    keyPoints: ['Passed in both Houses of Parliament', 'Representation for women and non-Muslims in Waqf boards', 'Mandatory audit of Waqf properties', 'State government oversight strengthened', 'Opposition termed it unconstitutional'],
+    dimensions: {
+      history: { title:'Historical Significance', subtitle:'Waqf system in India through history', icon:'📜', color:'var(--dim-history)', bg:'rgba(124,58,237,0.08)', content:'history' },
+      geography: { title:'Geographic Context', subtitle:'Distribution of Waqf properties across India', icon:'🗺️', color:'var(--dim-geo)', bg:'rgba(8,145,178,0.08)', content:'geo' },
+      economy: { title:'Economic Impact', subtitle:'Waqf property value and management economics', icon:'📈', color:'var(--dim-eco)', bg:'rgba(5,150,105,0.08)', content:'eco' },
+      polity: { title:'Polity & Governance', subtitle:'Constitutional provisions, minority rights, legislative process', icon:'⚖️', color:'var(--dim-polity)', bg:'rgba(220,38,38,0.08)', content:'polity' },
+      overlap: { title:'Past Year Questions', subtitle:'Questions on minority rights, Waqf, constitutional law', icon:'📝', color:'var(--dim-overlap)', bg:'rgba(217,119,6,0.08)', content:'pyq' },
+      science: { title:'Legal & Social Concepts', subtitle:'Understanding Waqf, endowments, and religious trusts', icon:'🔬', color:'var(--dim-science)', bg:'rgba(37,99,235,0.08)', content:'science' },
+    }
+  },
+  {
+    id:'t5', date: daysAgo(1), dateGroup:'yesterday',
+    icon:'🌏', category:'International', catColor:'#7C3AED', catBg:'rgba(124,58,237,0.1)',
+    title: 'India and EU Sign Trade and Technology Council (TTC) Agreement',
+    exams: ['UPSC','Banking'],
+    source: 'PIB / Business Today',
+    depth: 0,
+    body: `<p>India and the European Union have formalized the <strong>Trade and Technology Council (TTC)</strong> — a high-level forum that will coordinate on critical technology, trade standards, and supply chain resilience. The agreement mirrors similar TTC frameworks that the EU has with the United States.</p>
+    <div class="highlight">The TTC will focus on three pillars: strategic technologies (semiconductors, AI, quantum), clean energy trade, and standards alignment to reduce trade barriers between India and the 27-member EU bloc.</div>
+    <p>This comes as India-EU bilateral trade crossed <strong>$130 billion</strong> in 2023-24, and negotiations for a Free Trade Agreement (FTA) are ongoing after a decade-long hiatus.</p>`,
+    keyPoints: ['India-EU TTC mirrors the US-EU TTC framework', 'Focuses on semiconductors, AI, quantum technology', 'Bilateral trade: $130 billion in 2023-24', 'FTA negotiations ongoing', 'EU is India\'s largest trading bloc partner'],
+    dimensions: {
+      history: { title:'Historical Significance', subtitle:'India-EU relations through history', icon:'📜', color:'var(--dim-history)', bg:'rgba(124,58,237,0.08)', content:'history' },
+      geography: { title:'Geographic Context', subtitle:'EU\'s geographic reach and strategic significance', icon:'🗺️', color:'var(--dim-geo)', bg:'rgba(8,145,178,0.08)', content:'geo' },
+      economy: { title:'Economic Impact', subtitle:'Trade flows, FTA potential, technology transfer', icon:'📈', color:'var(--dim-eco)', bg:'rgba(5,150,105,0.08)', content:'eco' },
+      polity: { title:'Polity & Governance', subtitle:'Multilateral diplomacy and India\'s foreign policy', icon:'⚖️', color:'var(--dim-polity)', bg:'rgba(220,38,38,0.08)', content:'polity' },
+      overlap: { title:'Past Year Questions', subtitle:'Questions on India-EU relations, international bodies', icon:'📝', color:'var(--dim-overlap)', bg:'rgba(217,119,6,0.08)', content:'pyq' },
+      science: { title:'Technology Concepts', subtitle:'Semiconductors, AI governance, quantum computing', icon:'🔬', color:'var(--dim-science)', bg:'rgba(37,99,235,0.08)', content:'science' },
+    }
+  },
+  // 2 DAYS AGO
+  {
+    id:'t6', date: daysAgo(2), dateGroup:'older',
+    icon:'💧', category:'Environment', catColor:'#16A34A', catBg:'rgba(22,163,74,0.1)',
+    title: 'India Ranks 117 Out of 163 in Global Water Security Index 2025',
+    exams: ['UPSC','State PSC','SSC'],
+    source: 'OECD / PIB',
+    depth: 0,
+    body: `<p>The <strong>Global Water Security Index 2025</strong>, released by the OECD and Stockholm International Water Institute, has ranked India 117th out of 163 countries, highlighting chronic water stress, groundwater depletion, and inadequate water infrastructure as the primary concerns.</p>
+    <div class="highlight">India accounts for 18% of the world's population but holds only 4% of its freshwater resources — making water security a critical developmental challenge linked to agriculture, health, and climate resilience.</div>
+    <p>Over <strong>600 million Indians</strong> face high to extreme water stress annually, while 200,000 deaths are attributed to poor water quality every year. Groundwater, which provides 80% of India's drinking water, is being depleted at an alarming rate.</p>`,
+    keyPoints: ['India ranked 117/163 in Global Water Security Index 2025', '18% population, only 4% freshwater resources', '600 million face high to extreme water stress', 'Groundwater: 80% of drinking water, depleting rapidly', 'Jal Jeevan Mission aims for tap water to all rural homes by 2024'],
+    dimensions: {
+      history: { title:'Historical Significance', subtitle:'Water management in ancient and colonial India', icon:'📜', color:'var(--dim-history)', bg:'rgba(124,58,237,0.08)', content:'history' },
+      geography: { title:'Geographic Context', subtitle:'River systems, rainfall patterns, water-scarce regions', icon:'🗺️', color:'var(--dim-geo)', bg:'rgba(8,145,178,0.08)', content:'geo' },
+      economy: { title:'Economic Impact', subtitle:'Water economy, agriculture, industry linkages', icon:'📈', color:'var(--dim-eco)', bg:'rgba(5,150,105,0.08)', content:'eco' },
+      polity: { title:'Polity & Governance', subtitle:'Jal Shakti Ministry, inter-state water disputes, Jal Jeevan Mission', icon:'⚖️', color:'var(--dim-polity)', bg:'rgba(220,38,38,0.08)', content:'polity' },
+      overlap: { title:'Past Year Questions', subtitle:'Previous questions on water, rivers, environment', icon:'📝', color:'var(--dim-overlap)', bg:'rgba(217,119,6,0.08)', content:'pyq' },
+      science: { title:'Ecology & Environment', subtitle:'Hydrological cycle, groundwater, water treatment', icon:'🔬', color:'var(--dim-science)', bg:'rgba(37,99,235,0.08)', content:'science' },
+    }
+  },
+];
+
+// Dimension content generator (Claude-powered in production)
+const DIM_CONTENT = {
+  history: (topic) => `
+    <div class="dim-body">
+      <p>Understanding the <strong>historical backdrop</strong> of this news is essential for UPSC Mains and interview stages, where examiners expect you to place current events in their long-term context.</p>
+      <div class="timeline-strip">
+        ${getHistoryTimeline(topic.id)}
+      </div>
+      <div class="quote-block">
+        "Those who cannot remember the past are condemned to repeat it." — An examiner's mindset expects you to know the trajectory, not just the headline.
+        <div class="quote-source">— General Studies Strategy Note</div>
+      </div>
+      ${getHistoryBody(topic.id)}
+    </div>
+    <div class="quiz-callout" onclick="showToast('Quiz feature coming soon!')">
+      <div class="quiz-icon">🧠</div>
+      <div class="quiz-text">
+        <div class="quiz-text-title">Test Your Historical Understanding</div>
+        <div class="quiz-text-sub">5 quick questions on this historical context</div>
+      </div>
+      <div class="quiz-arrow">→</div>
+    </div>`,
+
+  geo: (topic) => `
+    <div class="dim-body">
+      <p>Geographic awareness is tested directly in Prelims (Physical Geography, Indian Geography) and indirectly in Mains through policy analysis and regional development questions.</p>
+      <div class="map-placeholder">🗺️</div>
+      ${getGeoBody(topic.id)}
+      <div class="info-grid">
+        ${getGeoCards(topic.id)}
+      </div>
+    </div>`,
+
+  eco: (topic) => `
+    <div class="dim-body">
+      <p>The economic dimension connects this news to India's macro and micro economy — a key segment in UPSC GS-3 and Banking exams.</p>
+      ${getEcoBody(topic.id)}
+      <div class="impact-row">
+        ${getEcoImpacts(topic.id)}
+      </div>
+    </div>
+    <div class="quiz-callout" onclick="showToast('Quiz feature coming soon!')">
+      <div class="quiz-icon">📊</div>
+      <div class="quiz-text">
+        <div class="quiz-text-title">Economic Concepts Quiz</div>
+        <div class="quiz-text-sub">Revise key economic terms related to this topic</div>
+      </div>
+      <div class="quiz-arrow">→</div>
+    </div>`,
+
+  polity: (topic) => `
+    <div class="dim-body">
+      <p>Polity and governance analysis is the backbone of UPSC preparation. Every news event has institutional, constitutional, or legislative dimensions worth exploring.</p>
+      ${getPolityBody(topic.id)}
+    </div>`,
+
+  pyq: (topic) => `
+    <div class="dim-body">
+      <p style="margin-bottom:20px;">These questions were asked in previous UPSC / State PSC / SSC exams and are <strong>directly relevant</strong> to this current affairs topic. Study the pattern — examiners often return to the same themes with new angles.</p>
+      ${getPYQs(topic.id)}
+    </div>
+    <div class="quiz-callout" onclick="showToast('AI-generated practice questions coming soon!')">
+      <div class="quiz-icon">✍️</div>
+      <div class="quiz-text">
+        <div class="quiz-text-title">Generate Practice Questions</div>
+        <div class="quiz-text-sub">AI will create 10 questions in exam style</div>
+      </div>
+      <div class="quiz-arrow">→</div>
+    </div>`,
+
+  science: (topic) => `
+    <div class="dim-body">
+      <p>Conceptual clarity on the underlying science or technology/legal concept is what separates a good answer from an excellent one in Mains.</p>
+      ${getScienceBody(topic.id)}
+    </div>`,
+};
+
+// ── Per-topic historical timelines
+function getHistoryTimeline(id) {
+  const timelines = {
+    t1: [
+      ['1962','ISRO founded by Dr. Vikram Sarabhai — India\'s first rocket launched from a church in Thumba, Kerala'],
+      ['1975','Aryabhata — India\'s first satellite launched by the Soviet Union'],
+      ['2008','Chandrayaan-1 discovers water molecules on the Moon'],
+      ['2014','MOM (Mangalyaan) makes India first Asian nation to reach Mars orbit on debut attempt'],
+      ['2019','Chandrayaan-2 partial success — orbiter operational, lander crashed'],
+      ['2023','Chandrayaan-3 lands successfully at Moon\'s south pole — a world first'],
+      ['2024','RLV-TD "Pushpak" completes autonomous runway landing — reusability milestone'],
+    ],
+    t2: [
+      ['1935','Reserve Bank of India established under the RBI Act'],
+      ['1969','Bank Nationalization — 14 major banks nationalized by Indira Gandhi govt'],
+      ['1991','LPG reforms — India opens economy; RBI gains more policy independence'],
+      ['2016','MPC established under the RBI Act via amendment — inflation targeting mandate'],
+      ['2020','Historic low: Repo rate cut to 4% during COVID-19 pandemic'],
+      ['2022-23','Rate hike cycle: RBI raises rates from 4% to 6.5% to combat post-COVID inflation'],
+      ['2025','First rate cut since 2020 — repo rate at 6.25%'],
+    ],
+    t3: [
+      ['1947','Andaman & Nicobar Islands become part of India at Independence'],
+      ['1957','Shompen tribe first officially documented — estimated 200-400 individuals'],
+      ['1972','Wildlife Protection Act — Great Nicobar declared an eco-sensitive zone'],
+      ['2004','Tsunami devastates Nicobar Islands — indigenous tribes survive due to local knowledge'],
+      ['2021','NITI Aayog proposes ₹72,000 crore Great Nicobar mega-project'],
+      ['2023','Initial forest clearance granted despite expert committee objections'],
+      ['2025','Final forest diversion clearance granted — project proceeds'],
+    ],
+  };
+  const tl = timelines[id] || [['2024','Relevant historical context for this topic']];
+  return tl.map(([yr,ev]) => `
+    <div class="timeline-event">
+      <div class="tl-dot-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-year">${yr}</div>
+      <div class="tl-text">${ev}</div>
+    </div>`).join('');
+}
+
+function getHistoryBody(id) {
+  const bodies = {
+    t1: `<p>India's space programme began as a <strong>purely scientific endeavour</strong> with no military ambitions — a conscious choice by Dr. Sarabhai, who saw space as a tool for national development. Rockets were initially transported on bullock carts and bicycles.</p><p>The shift from the Soviet-assisted era to self-reliance accelerated post-1991. Today ISRO competes globally with an enviable record of low-cost missions. The RLV programme represents the <strong>third generation</strong> of this evolution — from buying launches, to building rockets, to making them reusable.</p>`,
+    t2: `<p>The MPC (Monetary Policy Committee) was a landmark reform of 2016, shifting rate-setting from a single Governor to a six-member committee with a statutory inflation target of 4% (±2%). This removed the personal discretion of the Governor and made monetary policy more transparent and rule-based.</p><p>The current rate cut signals that after the inflation battle of 2022-24, the RBI believes price stability is returning — creating space for growth support.</p>`,
+    t3: `<p>The Andaman & Nicobar archipelago has historically been India's forgotten frontier. The British used the islands as a penal colony — the infamous <strong>Cellular Jail</strong> in Port Blair held freedom fighters including Veer Savarkar. Post-independence, strategic neglect meant minimal development for decades.</p><p>The <strong>Shompen</strong> are one of the world's last Particularly Vulnerable Tribal Groups — hunter-gatherers with minimal outside contact. Their fate under the mega-project is a constitutional question about the right to be left alone.</p>`,
+  };
+  return bodies[id] || `<p>Historical context will be fetched via AI analysis for this topic.</p>`;
+}
+
+function getGeoBody(id) {
+  const bodies = {
+    t1: `<p>The <strong>Aeronautical Test Range (ATR) at Chitradurga, Karnataka</strong> was chosen for its flat terrain, sparse population, and the 1.5 km long runway — ideal for simulating real landing conditions. Chitradurga is approximately 200 km from Bengaluru, India's tech capital and home to ISRO headquarters.</p><p>India's space infrastructure spans multiple states: <strong>Sriharikota (Andhra Pradesh)</strong> for launches, <strong>Thumba (Kerala)</strong> for the equatorial sounding rocket station, and <strong>Mahendragiri (Tamil Nadu)</strong> for engine testing.</p>`,
+    t2: `<p>Monetary policy decisions have differentiated geographic impacts. Rate cuts benefit <strong>urban borrowers</strong> (home loans, car loans) more immediately, while rural areas connected to MCLR-linked agricultural credit see delayed transmission.</p><p>India's <strong>financial geography</strong> matters: 65% of bank branches are in rural/semi-urban areas, but 80% of credit flows to urban centers. Rate cuts aim to stimulate the urban consumption engine while keeping rural credit affordable.</p>`,
+    t3: `<p>Great Nicobar Island is the <strong>southernmost and largest island</strong> of the Andaman & Nicobar archipelago — India's most remote territory. It sits at the strategic juncture of the <strong>Malacca Strait</strong> (world's second busiest shipping lane), the Indian Ocean, and the Bay of Bengal.</p><p>Over 90% of India's trade by volume and 77% by value passes through sea lanes adjacent to this island. China's "string of pearls" strategy — ports in Pakistan, Bangladesh, Sri Lanka, Myanmar — encircles India through these very waters.</p>`,
+  };
+  return bodies[id] || `<p>Geographic analysis coming soon via AI.</p>`;
+}
+
+function getGeoCards(id) {
+  const cards = {
+    t1: [['Location','Chitradurga, Karnataka — 200km from Bengaluru'],['Test Range','1.5 km airstrip at Aeronautical Test Range (ATR)'],['ISRO HQ','Bengaluru (ISTRAC) + Sriharikota (SDSC-SHAR)'],['Key Altitude','4.5 km air-drop → autonomous runway landing']],
+    t2: [['RBI HQ','Mumbai, Maharashtra'],['MPC Location','Decisions at RBI Central Board meetings'],['Impact Zone','Urban EMI borrowers, housing, auto sectors'],['Global Context','US Fed at 4.25-4.5%; ECB at 2.75% — India now competitive']],
+    t3: [['Location','10°N latitude — southernmost Indian territory'],['Area','868 sq km — India\'s largest island'],['Distance','90 km from Malacca Strait'],['Ecology','Leatherback turtle nesting, Giant robber crab, pristine rainforest']],
+  };
+  return (cards[id]||[['Key Fact 1','Value 1'],['Key Fact 2','Value 2']]).map(([l,v])=>`
+    <div class="info-card"><div class="info-card-label">${l}</div><div class="info-card-value">${v}</div></div>`).join('');
+}
+
+function getEcoBody(id) {
+  const bodies = {
+    t1: `<p>The global commercial space launch market is worth <strong>$8 billion annually</strong> and growing at 15% per year. India currently holds ~6% market share through ISRO's Arianespace partnership and the new commercial arm <strong>NewSpace India Limited (NSIL)</strong>.</p><p>A reusable launch vehicle could reduce per-kg launch costs from $2,000–4,000 to under $500 — making India potentially the world's most cost-effective launch provider. For context, SpaceX charges $2,700/kg on Falcon 9 vs ISRO's current ~$1,500/kg on PSLV.</p>`,
+    t2: `<p>A 25 bps repo rate cut can reduce the EMI on a ₹30 lakh, 20-year home loan by approximately <strong>₹400-500 per month</strong>. More significantly, it affects the cost of government borrowing — the 10-year G-Sec yield typically falls 10-15 bps on a rate cut, reducing fiscal deficit financing costs.</p><p>The transmission mechanism matters: banks pass on rate cuts to customers through MCLR (Marginal Cost of Funds Based Lending Rate) — typically with a 6-12 month lag. This means the real economy stimulus is delayed even if financial markets react immediately.</p>`,
+    t3: `<p>India handles only 0.5% of global transshipment traffic. Sri Lanka (Colombo) and Singapore handle 80% of South Asia's transshipment cargo. A Great Nicobar transshipment port could capture <strong>30-40% of this diverted cargo</strong>, potentially generating revenues of <strong>$10-15 billion annually</strong> within two decades.</p><p>However, critics note that the port construction cost of ₹30,000+ crore does not account for ecological restoration, and that Singapore and Colombo have far superior infrastructure and connectivity that will take decades to match.</p>`,
+  };
+  return bodies[id]||`<p>Economic analysis available via AI deep dive.</p>`;
+}
+
+function getEcoImpacts(id) {
+  const impacts = {
+    t1: [['🚀','Positive','Reduce launch costs by 80%','rgba(5,150,105,0.1)','#059669'],['💼','Positive','Attract satellite manufacturing FDI','rgba(5,150,105,0.1)','#059669'],['⚡','Challenge','Requires massive R&D investment','rgba(220,38,38,0.1)','#DC2626']],
+    t2: [['🏠','Positive','Lower home loan EMIs','rgba(5,150,105,0.1)','#059669'],['📉','Risk','Inflationary pressure if cut is premature','rgba(220,38,38,0.1)','#DC2626'],['📈','Positive','Boost GDP growth by 0.2-0.3%','rgba(5,150,105,0.1)','#059669']],
+    t3: [['⚓','Potential','$10-15B annual transshipment revenue','rgba(5,150,105,0.1)','#059669'],['🌿','Negative','Ecological damage worth ₹22,000 cr (CAG)','rgba(220,38,38,0.1)','#DC2626'],['🏗️','Investment','₹72,000 crore over 30 years','rgba(217,119,6,0.1)','#D97706']],
+  };
+  return (impacts[id]||[]).map(([icon,label,text,bg,color])=>`
+    <div class="impact-badge" style="background:${bg};border-color:${color};color:${color};">
+      ${icon} <span style="color:var(--text);">${label}: ${text}</span>
+    </div>`).join('');
+}
+
+function getPolityBody(id) {
+  const bodies = {
+    t1: `<p>ISRO operates under the <strong>Department of Space</strong>, which functions directly under the Prime Minister. The Space Commission, chaired by the ISRO Chairman, advises the government on space policy.</p><p>The landmark <strong>Indian Space Policy 2023</strong> opened the sector to private players through IN-SPACe (Indian National Space Promotion and Authorisation Centre) — a regulatory body to approve and supervise private space activities. NSIL (NewSpace India Limited) is the commercial arm for technology transfer.</p><div class="info-grid"><div class="info-card"><div class="info-card-label">Nodal Ministry</div><div class="info-card-value">Department of Space (under PM's office)</div></div><div class="info-card"><div class="info-card-label">Regulator</div><div class="info-card-value">IN-SPACe (Indian National Space Promotion and Authorisation Centre)</div></div><div class="info-card"><div class="info-card-label">Commercial Arm</div><div class="info-card-value">NewSpace India Limited (NSIL)</div></div><div class="info-card"><div class="info-card-label">Key Law</div><div class="info-card-value">Indian Space Policy 2023 (no dedicated Space Act yet)</div></div></div>`,
+    t2: `<p>The <strong>RBI Act, 1934</strong> governs the central bank. The MPC was created by the <strong>Finance Act, 2016</strong> amending the RBI Act — introducing a 6-member committee with a statutory mandate to maintain inflation at <strong>4% (±2%)</strong>.</p><div class="info-grid"><div class="info-card"><div class="info-card-label">MPC Composition</div><div class="info-card-value">RBI Governor (Chair) + 2 RBI officials + 3 government nominees</div></div><div class="info-card"><div class="info-card-label">Inflation Target</div><div class="info-card-value">4% CPI (±2% band) — set by Govt every 5 years</div></div><div class="info-card"><div class="info-card-label">Meeting Frequency</div><div class="info-card-value">Minimum 4 times a year (bimonthly)</div></div><div class="info-card"><div class="info-card-label">Voting</div><div class="info-card-value">Majority; Governor has casting vote in tie</div></div></div>`,
+    t3: `<p>The project requires clearances under the <strong>Forest Conservation Act, 1980</strong>, <strong>Wildlife Protection Act, 1972</strong>, and <strong>Environment Protection Act, 1986</strong>. The Shompen tribe falls under the <strong>Scheduled Tribes and Other Traditional Forest Dwellers (Recognition of Forest Rights) Act, 2006</strong>.</p><p>The <strong>National Commission for Scheduled Tribes (NCST)</strong> raised objections about Free, Prior, and Informed Consent (FPIC) of the Shompen — a right guaranteed under UN Declaration on the Rights of Indigenous Peoples, which India voted to adopt.</p>`,
+  };
+  return bodies[id]||`<p>Governance analysis available via AI deep dive.</p>`;
+}
+
+function getPYQs(id) {
+  const pyqs = {
+    t1: [
+      ['UPSC Prelims 2021','Consider the following statements about IN-SPACe: (1) It is a regulatory body under ISRO. (2) It grants authorisations to both government and private entities for space activities. Which of the statements given above is/are correct?','(A) 1 only  (B) 2 only  (C) Both  (D) Neither'],
+      ['UPSC Prelims 2019','India\'s first dedicated astronomy satellite \'AstroSat\' was launched in which year?','(A) 2013  (B) 2015  (C) 2017  (D) 2019'],
+      ['UPSC Mains GS-3 2023','Discuss the significance of India\'s Chandrayaan-3 mission for the country\'s space ambitions and scientific community.','Mains (Essay type — 15 marks)'],
+    ],
+    t2: [
+      ['UPSC Prelims 2020','In the context of Indian economy, the term \'Monetary Policy Committee\' is sometimes seen in news. Which of the following statements best describes this committee?','Standard 4-option MCQ on MPC structure'],
+      ['RBI Grade B 2023','The repo rate is the rate at which ___. What is the current repo rate?','Fill in the blank + numerical — Banking exam style'],
+      ['UPSC Mains GS-3 2022','Explain the transmission mechanism of monetary policy in India and the factors that limit its effectiveness.','15 marks Mains question — requires 200-250 words'],
+    ],
+    t3: [
+      ['UPSC Prelims 2019','The Shompen tribe is found in which of the following islands? (A) Lakshadweep (B) Andaman (C) Great Nicobar (D) Minicoy','Answer: (C) Great Nicobar'],
+      ['UPSC Prelims 2021','Leatherback turtle nesting sites in India are primarily found in: (A) Lakshadweep (B) Odisha coast (C) Great Nicobar (D) Both B and C','Answer: (D) Both B and C'],
+      ['UPSC Mains GS-3 2020','The concept of \'Particularly Vulnerable Tribal Groups\' (PVTGs) — discuss the challenges in balancing development imperatives with tribal rights in India.','15 marks — GS-3 topic'],
+    ],
+  };
+  return (pyqs[id]||[]).map(([exam,q,ans])=>`
+    <div class="pyq-item">
+      <div class="pyq-year">${exam}</div>
+      <div class="pyq-q">${q}</div>
+      <div class="pyq-exam" style="margin-top:8px;color:var(--saffron);cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.textContent=this.textContent.startsWith('▶')?'▼ Hide Answer':'▶ Show Answer'">▶ Show Answer</div>
+      <div style="display:none;margin-top:6px;font-size:13px;color:var(--dim-eco);font-weight:600;background:rgba(5,150,105,0.08);padding:8px 12px;border-radius:8px;">${ans}</div>
+    </div>`).join('');
+}
+
+function getScienceBody(id) {
+  const bodies = {
+    t1: `<p>A <strong>Reusable Launch Vehicle (RLV)</strong> works on the principle of powered descent — instead of expending the booster stage in the ocean, it autonomously navigates back to a landing zone using grid fins, cold gas thrusters, and a vertical/horizontal landing system.</p><div class="info-grid"><div class="info-card"><div class="info-card-label">Key Technology</div><div class="info-card-value">Autonomous Navigation System (ANS), Integrated Navigation, Guidance & Control (INGC)</div></div><div class="info-card"><div class="info-card-label">Landing Type</div><div class="info-card-value">Horizontal runway landing (like an aircraft) — unlike SpaceX\'s vertical landing</div></div><div class="info-card"><div class="info-card-label">Heat Shield</div><div class="info-card-value">Carbon-Carbon composite + Silica tiles for re-entry thermal protection</div></div><div class="info-card"><div class="info-card-label">TSTO Concept</div><div class="info-card-value">First stage (winged): returns and lands. Second stage: reaches orbit. Both reused.</div></div></div><p>India's approach is unique — it uses a <strong>winged body design</strong> (like a space shuttle) rather than SpaceX's propulsive vertical landing, which requires less fuel margin and leverages aerodynamic lift during re-entry.</p>`,
+    t2: `<div class="info-grid"><div class="info-card"><div class="info-card-label">Repo Rate</div><div class="info-card-value">Rate at which RBI lends to commercial banks overnight against govt securities</div></div><div class="info-card"><div class="info-card-label">Reverse Repo</div><div class="info-card-value">Rate at which RBI borrows from banks (absorbs excess liquidity)</div></div><div class="info-card"><div class="info-card-label">CRR</div><div class="info-card-value">Cash Reserve Ratio — % of NDTL banks must keep with RBI (no interest)</div></div><div class="info-card"><div class="info-card-label">SLR</div><div class="info-card-value">Statutory Liquidity Ratio — % of NDTL in govt securities (liquid assets)</div></div><div class="info-card"><div class="info-card-label">MSF</div><div class="info-card-value">Marginal Standing Facility — emergency overnight borrowing at Repo+25 bps</div></div><div class="info-card"><div class="info-card-label">LAF Corridor</div><div class="info-card-value">Liquidity Adjustment Facility — Repo to Reverse Repo spread</div></div></div>`,
+    t3: `<div class="info-grid"><div class="info-card"><div class="info-card-label">Leatherback Turtle</div><div class="info-card-value">World\'s largest sea turtle — critically endangered — Great Nicobar is a critical nesting site</div></div><div class="info-card"><div class="info-card-label">Tropical Rainforest</div><div class="info-card-value">Great Nicobar hosts one of the world\'s last undisturbed tropical rainforests — WHO declares it a biodiversity hotspot</div></div><div class="info-card"><div class="info-card-label">Coral Reefs</div><div class="info-card-value">Surrounding waters have pristine coral reef ecosystems — severely impacted by port dredging</div></div><div class="info-card"><div class="info-card-label">Giant Robber Crab</div><div class="info-card-value">World\'s largest land invertebrate — found only in Indo-Pacific islands including Great Nicobar</div></div></div>`,
+  };
+  return bodies[id]||`<p>Technical concept explanation will be generated by AI for this topic.</p>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let state = {
+  activeTopicId: null,
+  explorerOpen: false,
+  activeDimension: null,
+  readTopics: new Set(),
+  deepDivedTopics: new Set(),
+  exploredDimensions: new Set(),
+  activeExamFilter: 'all',
+};
+
+// ══════════════════════════════════════════════════════
+//  RENDER SIDEBAR
+// ══════════════════════════════════════════════════════
+function renderSidebar(topicsToRender) {
+  const groups = {};
+  topicsToRender.forEach(t => {
+    const key = t.dateGroup === 'today' ? 'today' : t.dateGroup === 'yesterday' ? 'yesterday' : 'older';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(t);
+  });
+
+  const orderKeys = ['today','yesterday','older'];
+  let html = '';
+
+  orderKeys.forEach(key => {
+    if (!groups[key]) return;
+    const dateLabel = key === 'today' ? daysAgo(0) : key === 'yesterday' ? daysAgo(1) : daysAgo(2);
+    const isToday = key === 'today';
+    html += `<div class="date-group">
+      <div class="date-label">
+        ${dateLabel}
+        ${isToday ? '<span class="date-today-badge">Today</span>' : ''}
+        <div class="date-label-line"></div>
+      </div>`;
+    groups[key].forEach(t => {
+      const depthPct = calculateDepth(t.id);
+      const isActive = state.activeTopicId === t.id;
+      const isRead = state.readTopics.has(t.id);
+      html += `
+      <div class="topic-item ${isActive ? 'active' : ''}" id="ti_${t.id}" onclick="openTopic('${t.id}')">
+        <div class="topic-icon" style="background:${t.catBg};color:${t.catColor};">${t.icon}</div>
+        <div class="topic-text">
+          <div class="topic-name">${t.title}</div>
+          <div class="topic-meta">
+            <span class="topic-category" style="color:${t.catColor};">${t.category}</span>
+            <div class="topic-depth-bar"><div class="topic-depth-fill" style="width:${depthPct}%"></div></div>
+            ${!isRead ? '<div class="topic-new-dot"></div>' : ''}
+          </div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('topic-list').innerHTML = html;
+}
+
+function calculateDepth(id) {
+  const dims = getDimKeys(id);
+  const explored = dims.filter(d => state.exploredDimensions.has(`${id}_${d}`)).length;
+  const baseRead = state.readTopics.has(id) ? 10 : 0;
+  return Math.round(baseRead + (explored / dims.length) * 90);
+}
+
+function getDimKeys(id) {
+  const t = TOPICS.find(t => t.id === id);
+  return t ? Object.keys(t.dimensions) : [];
+}
+
+// ══════════════════════════════════════════════════════
+//  OPEN TOPIC
+// ══════════════════════════════════════════════════════
+function openTopic(id) {
+  const topic = TOPICS.find(t => t.id === id);
+  if (!topic) return;
+
+  state.activeTopicId = id;
+  state.readTopics.add(id);
+  state.explorerOpen = false;
+  state.activeDimension = null;
+
+  document.getElementById('welcome-state').style.display = 'none';
+  const view = document.getElementById('article-view');
+  view.style.display = 'block';
+
+  // Rebuild with animation
+  view.style.animation = 'none';
+  view.offsetHeight; // reflow
+  view.style.animation = '';
+
+  // Exam tags
+  const examTagsHtml = topic.exams.map(e => {
+    const colors = {UPSC:'#7C3AED,rgba(124,58,237,0.1)',SSC:'#0891B2,rgba(8,145,178,0.1)','State PSC':'#059669,rgba(5,150,105,0.1)',Banking:'#D97706,rgba(217,119,6,0.1)'};
+    const [color,bg] = (colors[e]||'#666,#eee').split(',');
+    return `<span class="meta-exam-tag" style="background:${bg};color:${color};">${e}</span>`;
+  }).join('');
+
+  // Dimension chips preview
+  const dimChips = Object.entries(topic.dimensions).map(([key,dim]) => {
+    const explored = state.exploredDimensions.has(`${id}_${key}`);
+    return `<span class="depth-chip" style="color:${dim.color};border-color:${dim.color};${explored?'opacity:1;':''}"
+      onclick="openDimension('${key}')">
+      ${dim.icon} ${dim.title}${explored?' ✓':''}
+    </span>`;
+  }).join('');
+
+  view.innerHTML = `
+    <div class="breadcrumb">
+      <span>Current Affairs</span>
+      <span class="bc-sep">›</span>
+      <span style="color:${topic.catColor};">${topic.category}</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-current">Article</span>
+    </div>
+
+    <div class="article-category" style="background:${topic.catBg};color:${topic.catColor};">
+      ${topic.icon} ${topic.category}
+    </div>
+
+    <h1 class="article-headline">${topic.title}</h1>
+
+    <div class="article-meta">
+      <span class="meta-date">📅 ${topic.date}</span>
+      <span class="meta-source">📰 ${topic.source}</span>
+      <div class="meta-exam-tags">${examTagsHtml}</div>
+    </div>
+
+    <div class="news-body">${topic.body}</div>
+
+    <div class="key-points-panel">
+      <div class="kp-title">📌 Key Points for Exam</div>
+      <ul class="kp-list">
+        ${topic.keyPoints.map((pt,i) => `<li class="kp-item"><div class="kp-bullet">${i+1}</div><div>${pt}</div></li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="depth-section">
+      <div class="depth-cta-banner" onclick="toggleExplorer()">
+        <div class="cta-icon">🔭</div>
+        <div class="cta-text">
+          <div class="cta-title">Explore This Topic in Depth</div>
+          <div class="cta-sub">Go beyond the headline — understand its history, geography, economic impact, governance angle, and previous exam questions. Built for Mains-level understanding.</div>
+        </div>
+        <div class="cta-arrow" id="cta-arrow">↓</div>
+      </div>
+      <div class="depth-chips" id="depth-chips" style="display:none;">${dimChips}</div>
+      <div id="dimension-panel"></div>
+    </div>
+
+    <div class="article-actions">
+      <button class="action-btn" onclick="markRevision('${id}')">🔖 Save for Revision</button>
+      <button class="action-btn" onclick="shareNote('${id}')">📤 Copy Notes</button>
+      <button class="action-btn primary" onclick="toggleExplorer()">🔭 Explore Deeper →</button>
+    </div>
+  `;
+
+  // Update sidebar
+  renderSidebar(getFilteredTopics());
+  updateStats();
+}
+
+// ══════════════════════════════════════════════════════
+//  EXPLORER
+// ══════════════════════════════════════════════════════
+function toggleExplorer() {
+  state.explorerOpen = !state.explorerOpen;
+  const chips = document.getElementById('depth-chips');
+  const panel = document.getElementById('dimension-panel');
+  const arrow = document.getElementById('cta-arrow');
+  if (!chips || !panel) return;
+
+  if (state.explorerOpen) {
+    chips.style.display = 'flex';
+    arrow.textContent = '↑';
+    if (!state.activeDimension) {
+      // Auto-open first dimension
+      const topic = TOPICS.find(t => t.id === state.activeTopicId);
+      if (topic) openDimension(Object.keys(topic.dimensions)[0]);
+    }
+    panel.style.display = 'block';
+    state.deepDivedTopics.add(state.activeTopicId);
+  } else {
+    chips.style.display = 'none';
+    panel.style.display = 'none';
+    arrow.textContent = '↓';
+  }
+  updateStats();
+}
+
+function openDimension(key) {
+  state.explorerOpen = true;
+  state.activeDimension = key;
+  const chips = document.getElementById('depth-chips');
+  const panel = document.getElementById('dimension-panel');
+  const arrow = document.getElementById('cta-arrow');
+  if (chips) chips.style.display = 'flex';
+  if (arrow) arrow.textContent = '↑';
+
+  const topic = TOPICS.find(t => t.id === state.activeTopicId);
+  if (!topic || !panel) return;
+
+  state.exploredDimensions.add(`${state.activeTopicId}_${key}`);
+
+  // Build tabs
+  const tabsHtml = Object.entries(topic.dimensions).map(([k, dim]) => {
+    const isActive = k === key;
+    const explored = state.exploredDimensions.has(`${state.activeTopicId}_${k}`);
+    return `<button class="dim-tab ${isActive ? 'active' : ''}" onclick="openDimension('${k}')">
+      <span class="dim-tab-icon">${dim.icon}</span>
+      ${dim.title}
+      ${explored && !isActive ? ' ✓' : ''}
+    </button>`;
+  }).join('');
+
+  const dim = topic.dimensions[key];
+  const contentFn = DIM_CONTENT[dim.content] || DIM_CONTENT.science;
+
+  panel.innerHTML = `
+    <div class="dim-tabs">${tabsHtml}</div>
+    <div class="dim-content-wrap">
+      <div class="dim-pane active">
+        <div class="dim-header">
+          <div class="dim-header-icon" style="background:${dim.bg};color:${dim.color};">${dim.icon}</div>
+          <div>
+            <div class="dim-title">${dim.title}</div>
+            <div class="dim-subtitle">${dim.subtitle}</div>
+          </div>
+        </div>
+        ${contentFn(topic)}
+      </div>
+    </div>
+  `;
+
+  // Refresh chips
+  const dimChips = Object.entries(topic.dimensions).map(([k, d]) => {
+    const explored = state.exploredDimensions.has(`${state.activeTopicId}_${k}`);
+    return `<span class="depth-chip" style="color:${d.color};border-color:${d.color};${explored?'opacity:1;':''}"
+      onclick="openDimension('${k}')">
+      ${d.icon} ${d.title}${explored?' ✓':''}
+    </span>`;
+  }).join('');
+  if (chips) chips.innerHTML = dimChips;
+
+  // Scroll to panel
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateStats();
+  renderSidebar(getFilteredTopics());
+}
+
+// ══════════════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════════════
+function updateStats() {
+  const todayTopics = TOPICS.filter(t => t.dateGroup === 'today');
+  const readToday = todayTopics.filter(t => state.readTopics.has(t.id)).length;
+  document.getElementById('stat-read').textContent = `${readToday}/${todayTopics.length}`;
+  document.getElementById('prog-read').style.width = `${(readToday/todayTopics.length)*100}%`;
+  document.getElementById('stat-deep').textContent = state.deepDivedTopics.size;
+  document.getElementById('stat-dims').textContent = `${state.exploredDimensions.size}/${TOPICS.length * 6}`;
+}
+
+// ══════════════════════════════════════════════════════
+//  FILTERS
+// ══════════════════════════════════════════════════════
+function filterTopics(query) {
+  const q = query.toLowerCase();
+  const filtered = TOPICS.filter(t => !q || t.title.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
+  renderSidebar(filtered);
+}
+
+function filterExam(btn, exam) {
+  document.querySelectorAll('.exam-tag').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.activeExamFilter = exam;
+  renderSidebar(getFilteredTopics());
+}
+
+function getFilteredTopics() {
+  if (state.activeExamFilter === 'all') return TOPICS;
+  const map = { upsc:'UPSC', ssc:'SSC', state:'State PSC', rbi:'Banking' };
+  const exam = map[state.activeExamFilter];
+  return TOPICS.filter(t => t.exams.includes(exam));
+}
+
+// ══════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════
+function markRevision(id) {
+  showToast('🔖 Saved for revision!');
+}
+
+function shareNote(id) {
+  const topic = TOPICS.find(t => t.id === id);
+  if (!topic) return;
+  const text = `📰 ${topic.title}\n\n${topic.keyPoints.map((p,i)=>`${i+1}. ${p}`).join('\n')}\n\nRead more on Saarthi CA`;
+  navigator.clipboard?.writeText(text).then(() => showToast('📋 Notes copied to clipboard!'));
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(80px)'; }, 2500);
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+renderSidebar(TOPICS);
+updateStats();
+
+// Greeting based on time
+const hr = new Date().getHours();
+const greeting = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+const titleEl = document.querySelector('.welcome-title');
+if (titleEl) titleEl.textContent = `${greeting}, Aspirant`;
+
+// Auto-open first topic after short delay for demo
+setTimeout(() => {
+  openTopic('t1');
+}, 400);
+</script>
+</body>
+</html>
